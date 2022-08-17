@@ -8,14 +8,10 @@ class DatabaseHelper {
 
   factory DatabaseHelper() => _instance;
 
-  final String tableNote = 'incidentTypeTable';
+  final String tableName = 'incidentTypeTable';
   final String columnId = 'id';
-  final String columnParentId = 'parentId';
   final String columnName = 'name';
-  final String columnColor = 'color';
-  final String columnTarget = 'target';
-  final String columnIcon = 'icon';
-  final String columnSortOrder = 'sortOrder';
+  final String columnkritName = 'kritName';
 
   static Database? _db;
 
@@ -38,15 +34,18 @@ class DatabaseHelper {
   }
 
   void _onCreate(Database db, int newVersion) async {
-    await db.execute('CREATE TABLE $tableNote('
-        '$columnId INTEGER PRIMARY KEY, '
-        '$columnName TEXT, )');
+    await db.execute(
+      'CREATE TABLE $tableName('
+      '$columnId INTEGER PRIMARY KEY AUTOINCREMENT,'
+      '$columnName TEXT,'
+      '$columnkritName TEXT)',
+    );
   }
 
   Future<int> saveIncidentType(DataModel item) async {
     var dbClient = await db;
     var result = await dbClient.insert(
-      tableNote,
+      tableName,
       item.toJson(),
     );
     return result;
@@ -54,12 +53,13 @@ class DatabaseHelper {
 
   Future<List<DataModel>> getIncidentTypeDatabase() async {
     var dbClient = await db;
-    List<Map> list = await dbClient.rawQuery('SELECT * FROM $tableNote');
+    List<Map> list = await dbClient.rawQuery('SELECT * FROM $tableName');
     List<DataModel> products = <DataModel>[];
     for (int i = 0; i < list.length; i++) {
       var items = DataModel(
         id: list[i][columnId],
         name: list[i][columnName],
+        kritName: list[i][columnkritName],
       );
       products.add(items);
     }
@@ -68,13 +68,13 @@ class DatabaseHelper {
 
   Future<List<DataModel>> getIncidentTypeDatabaseParent(int id) async {
     var dbClient = await db;
-    List<Map> list = await dbClient
-        .rawQuery('SELECT * FROM $tableNote WHERE $columnParentId = $id');
+    List<Map> list = await dbClient.rawQuery('SELECT * FROM $tableName');
     List<DataModel> products = <DataModel>[];
     for (int i = 0; i < list.length; i++) {
       var items = DataModel(
         id: list[i][columnId],
         name: list[i][columnName],
+        kritName: list[i][columnkritName],
       );
       products.add(items);
     }
@@ -84,7 +84,7 @@ class DatabaseHelper {
   Future<DataModel> getIncidentTypeId(int id) async {
     var dbClient = await db;
     List<Map> list = await dbClient.rawQuery(
-      'SELECT * FROM $tableNote WHERE $columnId = $id',
+      'SELECT * FROM $tableName WHERE $columnId = $id',
     );
 
     if (list.length > 0) {
@@ -93,6 +93,7 @@ class DatabaseHelper {
         var items = DataModel(
           id: list[i][columnId],
           name: list[i][columnName],
+          kritName: list[i][columnkritName],
         );
         products.add(items);
       }
@@ -105,7 +106,7 @@ class DatabaseHelper {
   Future<int> deleteIncidentType(int id) async {
     var dbClient = await db;
     return await dbClient.delete(
-      tableNote,
+      tableName,
       where: '$columnId = ?',
       whereArgs: [id],
     );
@@ -114,7 +115,7 @@ class DatabaseHelper {
   Future<int> updateIncidentType(DataModel products) async {
     var dbClient = await db;
     return await dbClient.update(
-      tableNote,
+      tableName,
       products.toJson(),
       where: "$columnId = ?",
       whereArgs: [products.id],
@@ -128,7 +129,7 @@ class DatabaseHelper {
 
   Future<List<Map>> clear() async {
     var dbClient = await db;
-    List<Map> list = await dbClient.rawQuery('DELETE FROM $tableNote');
+    List<Map> list = await dbClient.rawQuery('DELETE FROM $tableName');
     return list;
   }
 }

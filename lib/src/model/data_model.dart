@@ -5,20 +5,23 @@ List<DataModel> dataModelFromJson(String str) =>
 
 class DataModel {
   DataModel({
-    required this.id,
+    this.id = 0,
     required this.name,
+    required this.kritName,
   });
 
   int id;
   String name;
+  String kritName;
 
   factory DataModel.fromJson(Map<String, dynamic> json) => DataModel(
         id: json["id"] ?? 0,
         name: json["name"] ?? "",
+        kritName: json['kritName'] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
         "name": name,
+        'kritName': kritName,
       };
 }
