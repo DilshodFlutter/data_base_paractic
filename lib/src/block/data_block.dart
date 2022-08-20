@@ -25,11 +25,13 @@ class DataBlock {
 
   Future<int> updateData(DataModel yangila) async {
     int id = await repository.saveIncidentType(yangila);
+    allDataBase();
     return id;
   }
 
   Future<int> deleteData(int uchir) async {
     int del = await repository.deleteIncidentType(uchir);
+    allDataBase();
     return del;
   }
 }

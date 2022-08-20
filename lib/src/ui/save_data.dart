@@ -1,5 +1,6 @@
 import 'package:data_base_paractic/src/block/data_block.dart';
 import 'package:data_base_paractic/src/model/data_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SaveData extends StatefulWidget {
@@ -12,6 +13,7 @@ class SaveData extends StatefulWidget {
 class _SaveDataState extends State<SaveData> {
   final TextEditingController _controllerName = TextEditingController();
   final TextEditingController _controllerKritName = TextEditingController();
+  final TextEditingController _controllerUpdateName = TextEditingController();
 
   @override
   void initState() {
@@ -36,7 +38,89 @@ class _SaveDataState extends State<SaveData> {
                     width: MediaQuery.of(context).size.width,
                     child: Column(
                       children: [
-                        Text(data[index].kritName),
+                        Container(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 20.0,
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 15.0,
+                            vertical: 4.0,
+                          ),
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 1,
+                              color: Colors.black,
+                            ),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  data[index].kritName,
+                                  style: const TextStyle(fontSize: 20),
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return CupertinoAlertDialog(
+                                            title: TextField(
+                                              controller: _controllerUpdateName,
+                                              decoration: InputDecoration(
+                                                  hintText:
+                                                      data[index].kritName),
+                                            ),
+                                            actions: [
+                                              GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text("Cancel")),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  dataBlock.updateData(
+                                                    DataModel(
+                                                      name:
+                                                          _controllerName.text,
+                                                      kritName:
+                                                          _controllerUpdateName
+                                                              .text,
+                                                    ),
+                                                  );
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text("Done"),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: const Icon(
+                                      Icons.edit,
+                                      size: 15.0,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      dataBlock.deleteData(data[index].id);
+                                    },
+                                    child: const Icon(
+                                      Icons.remove,
+                                      size: 20.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   );
@@ -89,10 +173,12 @@ class _SaveDataState extends State<SaveData> {
                       alignment: const FractionalOffset(0.94, 0.1),
                       child: ElevatedButton(
                         onPressed: () async {
-                          dataBlock.saveData(DataModel(
-                            name: _controllerName.text,
-                            kritName: _controllerKritName.text,
-                          ));
+                          dataBlock.saveData(
+                            DataModel(
+                              name: _controllerName.text,
+                              kritName: _controllerKritName.text,
+                            ),
+                          );
                           _controllerName.text = "";
                           _controllerKritName.text = "";
                           Navigator.pop(this.context);
