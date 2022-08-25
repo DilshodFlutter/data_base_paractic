@@ -6,7 +6,6 @@ class Repository {
   DatabaseHelper databaseHelper = DatabaseHelper();
   AppProvider appProvider = AppProvider();
 
-  /// database
   Future<int> saveIncidentType(DataModel item) =>
       databaseHelper.saveIncidentType(item);
 
@@ -22,6 +21,5 @@ class Repository {
   Future<int> updateIncidentType(DataModel products) =>
       databaseHelper.updateIncidentType(products);
 
-  /// api
   Future<List<DataModel>> getData() => appProvider.getData();
 }

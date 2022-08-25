@@ -34,7 +34,7 @@ class _SaveDataState extends State<SaveData> {
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   return Container(
-                    height: 50,
+                    margin: const EdgeInsets.only(bottom: 16),
                     width: MediaQuery.of(context).size.width,
                     child: Column(
                       children: [
